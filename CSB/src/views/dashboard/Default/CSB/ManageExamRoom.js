@@ -55,25 +55,34 @@ const ManageExamRoom = () => {
 
     const handleInputChange = (event) => {
         const value = parseInt(event.target.value) || 0;
-        if (value <= 5) {
-            setNumberOfFields(value);
-            setTeacherValues(Array(value).fill(''));
-            setPositionValues(Array(value).fill(''));
-        } else {
+        if (value < 0) {
+            alert('จำนวนกรรมการสอบไม่สามารถน้อยกว่า 0 ได้');
+            return; // Prevent negative input
+        } else if (value > 5) {
             alert('จำนวนกรรมการสอบห้ามเกิน 5 คน');
+            return; // Prevent exceeding 5
         }
+        
+        setNumberOfFields(value);
+        setTeacherValues(Array(value).fill(''));
+        setPositionValues(Array(value).fill(''));
     };
-
+    
     const handleInputChange2 = (event) => {
         const value = parseInt(event.target.value) || 0;
-        if (value <= 20) {
-            setNumberOfFields2(value);
-            setProjectValues(Array(value).fill(''));
-            setTimeOn1(Array(value).fill(''));
-        } else {
+        if (value < 0) {
+            alert('จำนวนโปรเจคที่สอบไม่สามารถน้อยกว่า 0 ได้');
+            return; // Prevent negative input
+        } else if (value > 20) {
             alert('จำนวนโปรเจคที่สอบห้ามเกิน 20');
+            return; // Prevent exceeding 20
         }
+        
+        setNumberOfFields2(value);
+        setProjectValues(Array(value).fill(''));
+        setTimeOn1(Array(value).fill(''));
     };
+    
 
     const handleSelectTeacher = (index) => (event) => {
         const newTeacherValues = [...teacherValues];
