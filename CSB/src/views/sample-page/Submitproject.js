@@ -4,8 +4,8 @@ import { Typography, Button, Grid } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 
-const CSB02 = () => {
-   
+const CSB04 = () => {
+
     const [PData, setPData] = useState({
         P_id: '', // Project ID
         P_name: '',
@@ -15,12 +15,19 @@ const CSB02 = () => {
         P_CSB04: '' // Add this field to store the status
     });
 
+    const [isExamOpen, setIsExamOpen] = useState(true); // Track exam status
+
     // Function to handle rejection
     const handleRejectClick = async () => {
+        if (!isExamOpen) {
+            alert('ไม่สามารถปฏิเสธได้ เนื่องจากไม่ได้อยู่ในช่วงการยื่นทดสอบ CSB04');
+            return;
+        }
+
         const isConfirmed = window.confirm('คุณปฏิเสธที่จะยื่นทดสอบ CSB04 ใช่หรือไม่?');
         if (isConfirmed) {
             try {
-                
+
                 await axios.put(`http://localhost:9999/Project/${PData.P_id}`, {
                     P_CSB04: 'ปฏิเสธโดยนักศึกษา' // Marking project as rejected
                 });
@@ -35,6 +42,11 @@ const CSB02 = () => {
 
     // Function to handle acceptance and update P_CSB02
     const handleAcceptClick = async () => {
+        if (!isExamOpen) {
+            alert('ไม่สามารถอนุมัติโครงการได้ เนื่องจากไม่ได้อยู่ในช่วงการยื่นทดสอบ CSB04');
+            return;
+        }
+
         const isConfirmed = window.confirm('คุณยินยอมที่จะยื่นทดสอบ ใช่หรือไม่?');
         if (isConfirmed) {
             try {
@@ -44,7 +56,7 @@ const CSB02 = () => {
                 });
 
                 alert('ยินยอมการยื่นทดสอบ CSB04 สำเร็จ');
-               
+
             } catch (error) {
                 console.error('Error accepting project and updating P_CSB04:', error.response ? error.response.data : error.message);
                 alert('ไม่สามารถอนุมัติโครงงานและอัปเดตสถานะได้');
@@ -56,6 +68,20 @@ const CSB02 = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const examResponse = await axios.get('http://localhost:9999/Exam');
+                const examData = examResponse.data;
+
+                // Check the status of Exam_o_CSB02
+                const examCSB04 = examData.find(exam => exam.Exam_o_CSB04 !== undefined);
+                if (examCSB04 && examCSB04.Exam_o_CSB04 === 'เปิด') {
+                    setIsExamOpen(true);
+                } else {
+                    setIsExamOpen(false);
+                    alert('ไม่ได้อยู่ในช่วงยื่นทดสอบโครงงานพิเศษ');
+                    return; // Exit if the exam is not open
+                }
+
+
                 // Fetch Project data
                 const projectResponse = await axios.get('http://localhost:9999/Project');
                 const projectData = projectResponse.data;
@@ -64,11 +90,11 @@ const CSB02 = () => {
                     const project = projectData[0]; // Adjust based on actual API response
 
                     setPData({
-                        P_id: project._id ,
-                        P_name: project.P_name ,
-                        P_S1: project.P_S1 ,
-                        P_S2: project.P_S2 ,
-                        P_T: project.P_T ,
+                        P_id: project._id,
+                        P_name: project.P_name,
+                        P_S1: project.P_S1,
+                        P_S2: project.P_S2,
+                        P_T: project.P_T,
                         P_CSB04: project.P_CSB04  // Store the project status
                     });
 
@@ -125,4 +151,4 @@ const CSB02 = () => {
     );
 };
 
-export default CSB02;
+export default CSB04;

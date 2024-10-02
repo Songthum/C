@@ -10,6 +10,7 @@ function ManageExamSP() {
     const [open1, setOpen1] = useState(false);
     const [open2, setOpen2] = useState(false);
     const [open3, setOpen3] = useState(false);
+    const [open4, setOpen4] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState('');
 
@@ -18,10 +19,12 @@ function ManageExamSP() {
         const savedOpen1 = localStorage.getItem('open1') === 'true';
         const savedOpen2 = localStorage.getItem('open2') === 'true';
         const savedOpen3 = localStorage.getItem('open3') === 'true';
+        const savedOpen4 = localStorage.getItem('open4') === 'true';
 
         setOpen1(savedOpen1);
         setOpen2(savedOpen2);
         setOpen3(savedOpen3);
+        setOpen4(savedOpen4);
     }, []);
 
     useEffect(() => {
@@ -29,13 +32,15 @@ function ManageExamSP() {
         localStorage.setItem('open1', open1);
         localStorage.setItem('open2', open2);
         localStorage.setItem('open3', open3);
-    }, [open1, open2, open3]);
+        localStorage.setItem('open4', open4);
+    }, [open1, open2, open3, open4]);
 
     const handleConfirm = async () => {
         const examData = {
             Exam_o_CSB01: open1 ? 'เปิด' : 'ปิด',
             Exam_o_CSB02: open2 ? 'เปิด' : 'ปิด',
             Exam_o_CSB03: open3 ? 'เปิด' : 'ปิด',
+            Exam_o_CSB04: open4 ? 'เปิด' : 'ปิด',
         };
 
         try {
@@ -56,7 +61,8 @@ function ManageExamSP() {
             let message = "";
             message += `การสอบหัวข้อ: ${examData.Exam_o_CSB01}\n`;
             message += `การสอบก้าวหน้า: ${examData.Exam_o_CSB02}\n`;
-            message += `การสอบป้องกัน: ${examData.Exam_o_CSB03}`;
+            message += `การสอบป้องกัน: ${examData.Exam_o_CSB03}\n`;
+            message += `การทดสอบโครงงาน: ${examData.Exam_o_CSB04}`;
 
             // Show dialog with the response message
             setDialogMessage(message);
@@ -102,6 +108,13 @@ function ManageExamSP() {
                                     <FormControlLabel
                                         control={<Switch checked={open3} onChange={() => setOpen3(!open3)} />}
                                         label=" การสอบป้องกัน"
+                                    />
+                                </Box>
+
+                                <Box sx={{ marginTop: 2 }}>
+                                    <FormControlLabel
+                                        control={<Switch checked={open4} onChange={() => setOpen4(!open4)} />}
+                                        label=" การทดสอบโครงงาน"
                                     />
                                 </Box>
 
