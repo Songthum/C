@@ -58,12 +58,12 @@ const SummaryExam = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell align="center">Room ID</TableCell>
-                <TableCell align="center">Room Name</TableCell>
-                <TableCell align="center">Chairman</TableCell>
-                <TableCell align="center">Teacher</TableCell>
-                <TableCell align="center">Projects</TableCell>
-                <TableCell align="center">Time Test</TableCell>
+                <TableCell align="center">เลขห้องสอบ</TableCell>
+                <TableCell align="center">ประเภทการสอบ</TableCell>
+                <TableCell align="center">ประธานกรรมการ</TableCell>
+                <TableCell align="center">กรรมการ</TableCell>
+                <TableCell align="center">ชื่อโปรเจกต์</TableCell>
+                <TableCell align="center">เวลาสอบ</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
