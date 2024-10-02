@@ -5,6 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
+import dayjs from 'dayjs';
 
 const ManageExamRoom = () => {
     const [option, setOption] = useState('');
@@ -55,34 +56,25 @@ const ManageExamRoom = () => {
 
     const handleInputChange = (event) => {
         const value = parseInt(event.target.value) || 0;
-        if (value < 0) {
-            alert('จำนวนกรรมการสอบไม่สามารถน้อยกว่า 0 ได้');
-            return; // Prevent negative input
-        } else if (value > 5) {
+        if (value <= 5) {
+            setNumberOfFields(value);
+            setTeacherValues(Array(value).fill(''));
+            setPositionValues(Array(value).fill(''));
+        } else {
             alert('จำนวนกรรมการสอบห้ามเกิน 5 คน');
-            return; // Prevent exceeding 5
         }
-        
-        setNumberOfFields(value);
-        setTeacherValues(Array(value).fill(''));
-        setPositionValues(Array(value).fill(''));
     };
-    
+
     const handleInputChange2 = (event) => {
         const value = parseInt(event.target.value) || 0;
-        if (value < 0) {
-            alert('จำนวนโปรเจคที่สอบไม่สามารถน้อยกว่า 0 ได้');
-            return; // Prevent negative input
-        } else if (value > 20) {
-            alert('จำนวนโปรเจคที่สอบห้ามเกิน 20');
-            return; // Prevent exceeding 20
+        if (value <= 20) {
+            setNumberOfFields2(value);
+            setProjectValues(Array(value).fill(''));
+            setTimeOn1(Array(value).fill(''));
+        } else {
+            alert('จำนวนโปรเจกต์ที่สอบห้ามเกิน 20');
         }
-        
-        setNumberOfFields2(value);
-        setProjectValues(Array(value).fill(''));
-        setTimeOn1(Array(value).fill(''));
     };
-    
 
     const handleSelectTeacher = (index) => (event) => {
         const newTeacherValues = [...teacherValues];
@@ -151,10 +143,14 @@ const ManageExamRoom = () => {
     const handleSave = async () => {
         const headTeacher = teacherValues[positionValues.findIndex(pos => pos === 'No1')]; // Find the head teacher's T_id
         const otherTeachers = teacherValues.filter((_, index) => positionValues[index] !== 'No1'); // Get other teachers' T_id
+    
+        // Format the date in 'YYYY-MM-DD' format
+        const formattedDate = date ? dayjs(date).format('YYYY-MM-DD') : null;
+    
         const examData = {
             R_id: room,
             R_name: option,
-            R_Date: date,
+            R_Date: formattedDate, // Use the formatted date here
             R_C: headTeacher, // If headTeacher is not found, set to empty string
             R_T: otherTeachers, // This will be an array of other teachers
             R_P: projectValues,
@@ -185,6 +181,7 @@ const ManageExamRoom = () => {
             // Handle error (e.g., show an error message)
         }
     };
+    
     
     const isFormValid = () => {
         return option && room && date && numberOfFields && numberOfFields2 &&
@@ -297,10 +294,10 @@ const ManageExamRoom = () => {
                     <Grid container spacing={3} mt={3}>
                         <Grid item xs={12}>
                             <Typography variant="h6" gutterBottom>
-                                จำนวนโปรเจคที่สอบ
+                                จำนวนโปรเจกต์ที่สอบ
                             </Typography>
                             <TextField
-                                label="จำนวนโปรเจคที่สอบ"
+                                label="จำนวนโปรเจกต์ที่สอบ"
                                 type="number"
                                 value={numberOfFields2}
                                 onChange={handleInputChange2}
